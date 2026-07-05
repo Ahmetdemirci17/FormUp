@@ -1,0 +1,47 @@
+# --- Flutter / Dart ---
+.dart_tool/
+.pub-cache/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugin-dependencies
+.metadata
+build/
+coverage/
+**/doc/api/
+app.*.symbols
+app.*.map.json
+
+# --- IDE and Editors ---
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- CRITICAL: SENSITIVE DATA AND LOCAL SETTINGS ---
+
+# Local Databases (SQLite)
+*.db
+*.db-shm
+*.db-wal
+
+# Local Data/Config Files
+*.json
+*.env
+*.xml
+
+# Encryption Keys (NEVER COMMIT THESE)
+privatekey
+publickey
+id_rsa*
+*.pem
+
+# Miscellaneous local files
+*.log
+*.swp
+*.pyc
