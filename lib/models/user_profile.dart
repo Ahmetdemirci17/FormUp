@@ -28,7 +28,7 @@ class UserProfile {
         age: 0,
         heightCm: 0,
         weightKg: 0,
-        activityLevel: ActivityLevel.moderatelyActive,
+        activityLevel: ActivityLevel.sedentary,
         goalType: GoalType.maintain,
         goalKg: 0,
         goalDays: 0,

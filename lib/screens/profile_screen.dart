@@ -140,17 +140,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              DropdownButtonFormField<ActivityLevel>(
-                initialValue: draft.activityLevel,
-                dropdownColor: AppColors.surfaceElevated,
-                style: const TextStyle(color: AppColors.textPrimary),
-                decoration: const InputDecoration(labelText: 'Aktivite seviyesi'),
-                items: ActivityLevel.values
-                    .map((l) => DropdownMenuItem(value: l, child: Text(l.label)))
-                    .toList(),
-                onChanged: (v) => setState(() => _draft = _draft!.copyWith(activityLevel: v)),
-              ),
-              const SizedBox(height: 12),
               DropdownButtonFormField<GoalType>(
                 initialValue: draft.goalType,
                 dropdownColor: AppColors.surfaceElevated,

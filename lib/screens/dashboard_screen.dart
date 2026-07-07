@@ -7,6 +7,7 @@ import '../models/food_entry.dart';
 import '../providers/activity_provider.dart';
 import '../providers/daily_stats_provider.dart';
 import '../providers/food_provider.dart';
+import '../providers/insight_provider.dart';
 import '../providers/refresh_provider.dart';
 import '../services/database_helper.dart';
 import '../theme/app_colors.dart';
@@ -28,6 +29,7 @@ class DashboardScreen extends ConsumerWidget {
     final statsAsync = ref.watch(dailyStatsProvider(date));
     final foodsAsync = ref.watch(foodsByDateProvider(date));
     final activitiesAsync = ref.watch(activitiesByDateProvider(date));
+    final insightsAsync = ref.watch(insightMessagesProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -132,6 +134,12 @@ class DashboardScreen extends ConsumerWidget {
                         MacroCard(label: 'Yağ', value: stats.fat, unit: 'g', color: AppColors.primaryDark),
                       ],
                     ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: _InsightsSection(
+                    insightsAsync: insightsAsync,
+                    onRefresh: () => refreshInsights(ref),
                   ),
                 ),
                 const SliverToBoxAdapter(child: SectionTitle(title: 'Öğünler')),
@@ -373,6 +381,120 @@ class _ActivityTile extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class _InsightsSection extends StatelessWidget {
+  const _InsightsSection({required this.insightsAsync, required this.onRefresh});
+
+  final AsyncValue<List<dynamic>> insightsAsync;
+  final VoidCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 22, 20, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'İçgörüler',
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+              IconButton(
+                tooltip: 'Yenile',
+                onPressed: onRefresh,
+                icon: const Icon(Icons.refresh_rounded, color: AppColors.textSecondary),
+              ),
+            ],
+          ),
+          insightsAsync.when(
+            loading: () => const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: LinearProgressIndicator(color: AppColors.primary),
+            ),
+            error: (_, _) => const _InsightFallbackCard(),
+            data: (insights) {
+              if (insights.isEmpty) return const _InsightFallbackCard();
+              return SizedBox(
+                height: 118,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: insights.length,
+                  separatorBuilder: (_, _) => const SizedBox(width: 12),
+                  itemBuilder: (context, index) {
+                    final insight = insights[index];
+                    return SizedBox(
+                      width: 270,
+                      child: LayeredCard(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 36,
+                              height: 36,
+                              decoration: BoxDecoration(
+                                color: insight.type.color.withValues(alpha: 0.14),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(insight.type.icon, color: insight.type.color, size: 20),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                insight.text,
+                                maxLines: 4,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.inter(
+                                  color: AppColors.textPrimary,
+                                  fontSize: 13,
+                                  height: 1.35,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InsightFallbackCard extends StatelessWidget {
+  const _InsightFallbackCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return LayeredCard(
+      child: Row(
+        children: [
+          const Icon(Icons.insights_rounded, color: AppColors.textSecondary),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Daha net öneriler için birkaç günlük yemek kaydı ekle.',
+              style: GoogleFonts.inter(color: AppColors.textSecondary),
+            ),
+          ),
+        ],
       ),
     );
   }

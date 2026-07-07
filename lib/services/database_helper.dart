@@ -1,5 +1,6 @@
 import '../models/activity_entry.dart';
 import '../models/food_entry.dart';
+import '../models/insight.dart';
 import '../models/user_profile.dart';
 import '../utils/date_utils.dart';
 import 'storage/app_data.dart';
@@ -129,6 +130,29 @@ class DatabaseHelper {
         if (dateCmp != 0) return dateCmp;
         return (a.id ?? 0).compareTo(b.id ?? 0);
       });
+  }
+
+
+
+  // --- Insight Cache ---
+
+  Future<InsightCache?> getInsightCache() async {
+    await _ensureInit();
+    final cache = _data.insightCache;
+    if (cache == null) return null;
+    return InsightCache.fromMap(cache);
+  }
+
+  Future<void> saveInsightCache(InsightCache cache) async {
+    await _ensureInit();
+    _data = _data.copyWith(insightCache: cache.toMap());
+    await _persist();
+  }
+
+  Future<void> clearInsightCache() async {
+    await _ensureInit();
+    _data = _data.copyWith(clearInsightCache: true);
+    await _persist();
   }
 
   // --- Activity CRUD ---

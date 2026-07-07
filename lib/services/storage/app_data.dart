@@ -5,6 +5,7 @@ class AppData {
     List<Map<String, dynamic>>? activities,
     this.nextFoodId = 1,
     this.nextActivityId = 1,
+    this.insightCache,
   })  : foods = foods ?? [],
         activities = activities ?? [];
 
@@ -13,6 +14,7 @@ class AppData {
   List<Map<String, dynamic>> activities;
   int nextFoodId;
   int nextActivityId;
+  Map<String, dynamic>? insightCache;
 
   factory AppData.fromJson(Map<String, dynamic> json) {
     return AppData(
@@ -27,6 +29,7 @@ class AppData {
           [],
       nextFoodId: json['nextFoodId'] as int? ?? 1,
       nextActivityId: json['nextActivityId'] as int? ?? 1,
+      insightCache: json['insightCache'] as Map<String, dynamic>?,
     );
   }
 
@@ -36,6 +39,7 @@ class AppData {
         'activities': activities,
         'nextFoodId': nextFoodId,
         'nextActivityId': nextActivityId,
+        'insightCache': insightCache,
       };
 
   AppData copyWith({
@@ -45,6 +49,8 @@ class AppData {
     List<Map<String, dynamic>>? activities,
     int? nextFoodId,
     int? nextActivityId,
+    Map<String, dynamic>? insightCache,
+    bool clearInsightCache = false,
   }) {
     return AppData(
       profile: clearProfile ? null : (profile ?? this.profile),
@@ -52,6 +58,7 @@ class AppData {
       activities: activities ?? this.activities,
       nextFoodId: nextFoodId ?? this.nextFoodId,
       nextActivityId: nextActivityId ?? this.nextActivityId,
+      insightCache: clearInsightCache ? null : (insightCache ?? this.insightCache),
     );
   }
 }

@@ -22,7 +22,7 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int _step = 0;
-  static const _totalSteps = 5;
+  static const _totalSteps = 4;
   bool _validationAttempted = false;
 
   final _ageController = TextEditingController();
@@ -149,8 +149,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     return switch (_step) {
       0 => draft.age >= 10 && draft.age <= 100,
       1 => draft.heightCm >= 100 && draft.weightKg >= 30,
-      2 => true,
-      3 => isGoalTargetComplete(draft),
+      2 => isGoalTargetComplete(draft),
       _ => CalorieCalculator.hasCompleteBodyMetrics(draft),
     };
   }
@@ -186,9 +185,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           weightController: _weightController,
           showErrors: _validationAttempted,
         ),
-      2 => _StepActivity(draft: draft, key: const ValueKey(2)),
-      3 => _StepGoal(draft: draft, key: const ValueKey(3)),
-      _ => _StepSummary(draft: draft, key: const ValueKey(4)),
+      2 => _StepGoal(draft: draft, key: const ValueKey(2)),
+      _ => _StepSummary(draft: draft, key: const ValueKey(3)),
     };
   }
 }
@@ -305,49 +303,6 @@ class _StepBody extends ConsumerWidget {
               ),
         ),
       ],
-    );
-  }
-}
-
-class _StepActivity extends ConsumerWidget {
-  const _StepActivity({super.key, required this.draft});
-  final UserProfile draft;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ListView(
-      padding: const EdgeInsets.all(24),
-      children: ActivityLevel.values.map((level) {
-        final selected = draft.activityLevel == level;
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: AnimatedScaleButton(
-            onPressed: () => ref.read(onboardingDraftProvider.notifier).update(
-                  (s) => s.copyWith(activityLevel: level),
-                ),
-            child: LayeredCard(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(level.label, style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                        Text(
-                          'Çarpan: ${level.multiplier}',
-                          style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (selected) const Icon(Icons.check_circle_rounded, color: AppColors.primary),
-                ],
-              ),
-            ),
-          ),
-        );
-      }).toList(),
     );
   }
 }
