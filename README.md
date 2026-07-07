@@ -1,58 +1,62 @@
-# FormUp
+# ShapeUp
 
-FormUp, günlük kalori alımınızı ve harcamanızı takip etmenize yardımcı olan, kişisel hedeflerinize (kilo verme, koruma veya alma) göre özelleştirilebilir, modern ve şık bir Flutter uygulamasıdır.
+Kişiselleştirilmiş kalori takip uygulaması. Yaş, boy, kilo ve aktivite seviyene göre günlük kalori ihtiyacını hesaplar; yediğin yemeği ve yaptığın aktiviteyi kaydettikçe günlük hedefini canlı olarak günceller.
 
-## Temel Özellikler
+## Özellikler
 
-### 1. Kişiselleştirilmiş Onboarding
-*   **Adım Adım Kurulum:** Cinsiyet, yaş, boy, kilo ve aktivite seviyesi bilgilerini alan kullanıcı dostu bir sihirbaz.
-*   **Akıllı Hedef Belirleme:** Kilo verme, koruma veya alma hedefleri için özel kalori ve süre hesaplaması.
-*   **Sağlık Kontrolü:** Hesaplanan günlük kalori kotasının güvenli sınırlar (kadınlar için 1200 kcal, erkekler için 1500 kcal) altında kalıp kalmadığını kontrol eder.
+- Mifflin-St Jeor formülüyle BMR/TDEE hesaplama
+- Hedef bazlı günlük kalori kotası (kaç kg, kaç günde)
+- Yemek kaydı (kalori + protein/karbonhidrat/yağ)
+- **Fotoğrafla yemek tanıma** — kamerayla çekilen yemek fotoğrafı Gemini 3.5 ile analiz edilir; paketli ürünlerde Open Food Facts veritabanından gerçek besin değerleri, bilinmeyen yemeklerde AI tahmini kullanılır. Ekleme öncesi kullanıcı onayı istenir.
+- Aktivite kaydı (MET bazlı kalori yakımı, yürüyüş için adım sayısından otomatik hesaplama)
+- **Kişiselleştirilmiş içgörüler** — günlük/haftalık/aylık yeme alışkanlıkları analiz edilip doğal dilde öneriler sunulur (örn. "Bu hafta öğle yemeklerinde ortalamanın üzerinde kalori aldın")
+- Gelişmiş ilerleme grafikleri (7/30/90 gün, öğün bazlı dağılım, makro trendleri, hedefe ulaşma projeksiyonu)
 
-### 2. Bilimsel Hesaplama Motoru
-*   **Mifflin-St Jeor Formülü:** Bazal metabolizma hızınızı (BMR) bilimsel yöntemle hesaplar.
-*   **Aktivite Bazlı TDEE:** Günlük aktivite seviyenize göre toplam enerji harcamanızı (TDEE) belirler.
-*   **Dinamik Kota:** Hedefinize ulaşmak için gerekli kalori açığını veya fazlasını günlük kota olarak otomatik ayarlar.
+## Teknoloji
 
-### 3. İnteraktif Dashboard
-*   **Animasyonlu Progress Ring:** CustomPainter ile çizilmiş, o anki kalori durumunuzu % olarak gösteren modern bir görselleştirme.
-*   **Makro Takibi:** Protein, Karbonhidrat ve Yağ dağılımınızı günlük hedefinize göre anlık takip edin.
-*   **Dinamik Kota Güncelleme:** Gün içinde eklediğiniz aktiviteler otomatik olarak günlük kalori kotanızı artırır ve arayüzde anında yansıtılır.
+- Flutter
+- Riverpod (state management)
+- sqflite (yerel veritabanı)
+- fl_chart (grafikler)
+- Gemini API (yemek fotoğrafı tanıma ve içgörü üretimi)
+- Open Food Facts API (paketli ürün besin değerleri)
 
-### 4. Yemek ve Aktivite Günlüğü
-*   **Öğün Bazlı Takip:** Kahvaltı, Öğle, Akşam ve Ara Öğün olarak kategorize edilmiş yemek kayıtları.
-*   **Kolay Aktivite Ekleme:** Yürüyüş, koşu, spor gibi aktiviteleri seçerek MET değerleri üzerinden otomatik yakılan kalori hesaplaması.
-*   **Yerel Veri Saklama:** Tüm verileriniz SQLite veritabanı ile cihazınızda güvenle saklanır, internet gerektirmez.
+## Kurulum
 
-### 5. İstatistikler
-*   **Görsel Raporlar:** `fl_chart` ile desteklenen günlük/haftalık kalori alım grafiklerini inceleyin.
-*   **İlerleme Takibi:** Hedefinize ne kadar yaklaştığınızı istatistik ekranından gözlemleyin.
-
----
-
-## Gereksinimler
-
-1.  **Flutter SDK**: [Flutter Kurulum Rehberi](https://docs.flutter.dev/get-started/install)
-2.  **Android Studio veya Xcode** (Android veya iOS geliştirme için).
-
-## Kurulum ve Çalıştırma
-
-### 1. Bağımlılıkları Yükleme
-Proje dizininde (FormUp/) terminali açın:
 ```bash
+git clone https://github.com/Ahmetdemirci17/calorie_tracker.git
+cd calorie_tracker
 flutter pub get
 ```
 
-### 2. Uygulamayı Çalıştırma
-Bağlı bir cihazda çalıştırmak için:
+### API Anahtarı
+
+Proje kök dizininde bir `.env` dosyası oluştur (`.env.example` dosyasını referans al):
+
+```
+GEMINI_API_KEY=senin_api_keyin
+```
+
+`.env` dosyası `.gitignore` içinde tutulur, repoya asla commit edilmez.
+
+### Çalıştırma
+
 ```bash
 flutter run
 ```
 
-Eğer Linux üzerinde masaüstü uygulaması olarak çalıştırmak isterseniz:
-```bash
-flutter run -d linux
+## Klasör Yapısı
+
+```
+lib/
+  models/       # Veri modelleri
+  services/     # Hesaplama mantığı, veritabanı, AI entegrasyonları
+  providers/    # Riverpod state provider'ları
+  screens/      # Uygulama ekranları
+  widgets/      # Tekrar kullanılabilir bileşenler
+  theme/        # Renk paleti ve tipografi
 ```
 
----
-*Not: Bu uygulama yerel verileri cihazınızda saklar. Hassas verileriniz Git deposuna commit edilmez.*
+## Lisans
+
+MIT
