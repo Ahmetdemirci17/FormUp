@@ -1,4 +1,4 @@
-# ShapeUp
+# FormUp
 
 Kişiselleştirilmiş kalori takip uygulaması. Yaş, boy, kilo ve aktivite seviyene göre günlük kalori ihtiyacını hesaplar; yediğin yemeği ve yaptığın aktiviteyi kaydettikçe günlük hedefini canlı olarak günceller.
 
